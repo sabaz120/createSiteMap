@@ -29,18 +29,35 @@ class SitemapsController extends AdminBaseController
      *
      * @return Response
      */
+
+     public function callFunction(){
+       echo 'hola';
+     }
+     public function GenerateSiteMapRoutes(){
+       /*
+       Array Structure: path of entity,route that receives parameter,
+       */
+       $routes=$this->callFunction();
+     }
+
     public function generateSiteMap(){
       $xml = '<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
       $app = app();
       $routes = $app->routes->getRoutes();
+      $xml .=
+      '<url>
+      <loc>http://'.$_SERVER["HTTP_HOST"].'/</loc>
+      <lastmod>'.date("Y-m-d H:i:s").'</lastmod>
+      <priority>0.80</priority>
+      </url>';
       foreach($routes as $route){
         // echo 'Uri: '.$route->uri.' Name: '.$route->getName().' Prefix: '.$route->getPrefix().' Method: '.$route->getActionMethod().'<br>';
         if($route->getActionMethod()=="show"){
-          if(strpos($route->uri, 'backend') !== false){
+          if(strpos($route->uri, 'backend') !== false || strpos($route->uri, '{') !== false){
 
           }else{
-            echo 'Rutas: '.$route->uri.'<br>';
+            echo 'Routes: '.$route->uri.'<br>';
             $xml .=
             '<url>
             <loc>http://'.$_SERVER["HTTP_HOST"].'/'.$route->uri.'</loc>
@@ -51,27 +68,26 @@ class SitemapsController extends AdminBaseController
         }
       }
       $xml .='</urlset>';
-      $nombre_archivo = "sitemap.xml";
+      $file_name = "sitemap.xml";
 
-      if(file_exists($nombre_archivo))
+      if(file_exists($file_name))
       {
-        $mensaje = "El Archivo $nombre_archivo se ha modificado";
+        $mensaje = "The file $file_name it has been modified";
       }
-
       else
       {
-        $mensaje = "El Archivo $nombre_archivo se ha creado";
+        $mensaje = "The file $file_name it has been created";
       }
 
-      if($archivo = fopen($nombre_archivo, "w"))
+      if($archivo = fopen($file_name, "w"))
       {
         if(fwrite($archivo, $xml))
         {
-          echo "Se ha ejecutado correctamente";
+          echo "It has been executed correctly";
         }
         else
         {
-          echo "Ha habido un problema al crear el archivo";
+          echo "There was a problem creating the file.";
         }
 
         fclose($archivo);
