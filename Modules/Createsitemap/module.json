@@ -1,0 +1,17 @@
+{
+    "name": "Createsitemap",
+    "alias": "createsitemap",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 1,
+    "providers": [
+        "Modules\\Createsitemap\\Providers\\CreatesitemapServiceProvider",
+        "Modules\\Createsitemap\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        
+    ],
+    "requires": []
+}
