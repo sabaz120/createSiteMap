@@ -30,16 +30,6 @@ class SitemapsController extends AdminBaseController
      * @return Response
      */
 
-     public function callFunction(){
-       echo 'hola';
-     }
-     public function GenerateSiteMapRoutes(){
-       /*
-       Array Structure: path of entity,route that receives parameter,
-       */
-       $routes=$this->callFunction();
-     }
-
     public function generateSiteMap(){
       $xml = '<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
@@ -67,34 +57,26 @@ class SitemapsController extends AdminBaseController
           }
         }
       }
+      $bandera=0;
       $xml .='</urlset>';
       $file_name = "sitemap.xml";
-
       if(file_exists($file_name))
-      {
-        $mensaje = "The file $file_name it has been modified";
-      }
+        $message = "The file $file_name it has been modified";
       else
-      {
-        $mensaje = "The file $file_name it has been created";
-      }
-
-      if($archivo = fopen($file_name, "w"))
-      {
-        if(fwrite($archivo, $xml))
-        {
-          echo "It has been executed correctly";
+        $message = "The file $file_name it has been created";
+      if($file = fopen($file_name, "w")){
+        if(fwrite($file, $xml)){
+          $message="It has been executed correctly";
+          $b=1;
         }
         else
-        {
-          echo "There was a problem creating the file.";
-        }
-
-        fclose($archivo);
-      }
-      // var_dump($xml);
-      ////////Fin
-      // dd('stop');
+          $message="There was a problem creating the file.";
+        fclose($file);
+      }//if($file = fopen($file_name, "w")){
+      if($b==1)
+        return view('createsitemap::admin.sitemaps.viewSiteMapXML',array('success'=>1,'xml'=>$xml,'message'=>$message));
+      else
+        return view('createsitemap::admin.sitemaps.viewSiteMapXML',array('success'=>0,'message'=>$message));
     }
     public function index()
     {
