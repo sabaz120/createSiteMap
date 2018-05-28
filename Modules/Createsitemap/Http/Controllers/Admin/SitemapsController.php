@@ -31,6 +31,13 @@ class SitemapsController extends AdminBaseController
      */
 
     public function generateSiteMap(){
+
+      $m=new \diversen\meta();
+      // $ary=$m->getMeta("http://www.imaginacolombia.com/");
+      // print_r($ary);
+      // // print_r($ary['title']);
+      // dd('stop');
+      $routesArray=array();
       $xml = '<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
       $app = app();
@@ -39,12 +46,14 @@ class SitemapsController extends AdminBaseController
       '<url>
       <loc>http://'.$_SERVER["HTTP_HOST"].'/</loc>
       <lastmod>'.date("Y-m-d H:i:s").'</lastmod>
-      <priority>0.80</priority>
+      <priority>1.00</priority>
       </url>';
+      $ary=$m->getMeta("http://".$_SERVER["HTTP_HOST"]."/");
+      $routesArray=array_merge($routesArray,array(['tittle'=>$ary['title'],'route'=>"http://".$_SERVER["HTTP_HOST"]."/"]));
       foreach($routes as $route){
         // echo 'Uri: '.$route->uri.' Name: '.$route->getName().' Prefix: '.$route->getPrefix().' Method: '.$route->getActionMethod().'<br>';
-        if($route->getActionMethod()=="show"){
-          if(strpos($route->uri, 'backend') !== false || strpos($route->uri, '{') !== false){
+        if($route->getActionMethod()=="show" || $route->getActionMethod()=="index"){
+          if(strpos($route->uri, 'backend') !== false || strpos($route->uri, '{') !== false || strpos($route->uri, 'api') !== false){
 
           }else{
             // echo 'Routes: '.$route->uri.'<br>';
@@ -54,9 +63,15 @@ class SitemapsController extends AdminBaseController
             <lastmod>'.date("Y-m-d H:i:s").'</lastmod>
             <priority>0.80</priority>
             </url>';
+            $ary=$m->getMeta("http://".$_SERVER["HTTP_HOST"]."/".$route->uri);
+            $routesArray=array_merge($routesArray,array(['tittle'=>$ary['title'],'route'=>"http://".$_SERVER["HTTP_HOST"]."/".$route->uri]));
+            // print_r($ary['title']);
           }//else
         }//Type method route = show
       }//foreach routes
+      // dd('stop');
+      $ary=$m->getMeta("http://www.imaginacolombia.com/");
+      $routesArray=array_merge($routesArray,array(['tittle'=>$ary['title'],'route'=>"http://".$_SERVER["HTTP_HOST"]."/".$route->uri]));
       $bandera=0;
       $xml .='</urlset>';
       $file_name = "sitemap.xml";
@@ -74,7 +89,7 @@ class SitemapsController extends AdminBaseController
         fclose($file);
       }//if($file = fopen($file_name, "w")){
       if($b==1)
-        return view('createsitemap::admin.sitemaps.viewSiteMapXML',array('success'=>1,'xml'=>$xml,'message'=>$message));
+        return view('createsitemap::admin.sitemaps.viewSiteMapXML',array('success'=>1,'xml'=>$xml,'message'=>$message,'routes'=>$routesArray));
       else
         return view('createsitemap::admin.sitemaps.viewSiteMapXML',array('success'=>0,'message'=>$message));
     }

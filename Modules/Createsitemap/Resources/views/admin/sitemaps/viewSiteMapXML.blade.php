@@ -31,11 +31,23 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                   @if($success==1)
-                  <div class="text-center">
-                    <h2><span class="text-success">Sitemap.xml {{$message}} </span> </h2>
+                  <div class="col-md-6">
+                    <div class="text-center">
+                      <h2><span class="text-success">Sitemap.xml {{$message}} </span> </h2>
+                    </div>
+                    <label>Content of sitemap.xml:</label>
+                    <textarea name="name" class="form-control" rows="20" readonly="true" style="max-width:100%;margin:0px;width:1000px;height:910x;">{{$xml}}</textarea>
                   </div>
-                  <label>Content of sitemap.xml:</label>
-                  <textarea name="name" class="form-control" rows="20" readonly="true" cols="80">{{$xml}}</textarea>
+                  <div class="col-md-6">
+                    <div class="text-center">
+                      <h2><span class="text-success">List of routes</span></h2>
+                    </div>
+                    @foreach($routes as $route)
+                      <ul class="list-group">
+                        <li class="list-group-item"><a href="{{$route['route']}}">@if(is_null($route['tittle'])) {{$route['route']}} @else {{$route['tittle']}} @endif</a></li>
+                      </ul>
+                    @endforeach
+                  </div>
                   @else
                   <div class="text-center jumbotron">
                     <h2><span class="text-danger">{{$message}}.</span></h2>
