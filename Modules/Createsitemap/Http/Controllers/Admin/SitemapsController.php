@@ -47,16 +47,16 @@ class SitemapsController extends AdminBaseController
           if(strpos($route->uri, 'backend') !== false || strpos($route->uri, '{') !== false){
 
           }else{
-            echo 'Routes: '.$route->uri.'<br>';
+            // echo 'Routes: '.$route->uri.'<br>';
             $xml .=
             '<url>
             <loc>http://'.$_SERVER["HTTP_HOST"].'/'.$route->uri.'</loc>
             <lastmod>'.date("Y-m-d H:i:s").'</lastmod>
             <priority>0.80</priority>
             </url>';
-          }
-        }
-      }
+          }//else
+        }//Type method route = show
+      }//foreach routes
       $bandera=0;
       $xml .='</urlset>';
       $file_name = "sitemap.xml";

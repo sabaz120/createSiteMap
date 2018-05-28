@@ -8,7 +8,8 @@ return [
     'title' => [
         'sitemaps' => 'Sitemaps',
         'create sitemaps' => 'Create a sitemaps',
-        'edit sitemaps' => 'Edit a sitemaps',
+        'createsitemaps' => 'Create a sitemaps',
+        'edit sitemaps' => 'Edit a sitemaps'
     ],
     'button' => [
         'create sitemaps' => 'Create a sitemaps',

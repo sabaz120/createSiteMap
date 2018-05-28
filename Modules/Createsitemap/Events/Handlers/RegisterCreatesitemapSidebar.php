@@ -37,20 +37,26 @@ class RegisterCreatesitemapSidebar implements \Maatwebsite\Sidebar\SidebarExtend
     public function extendWith(Menu $menu)
     {
         $menu->group(trans('core::sidebar.content'), function (Group $group) {
-            $group->item(trans('createsitemap::createsitemaps.title.createsitemaps'), function (Item $item) {
-                $item->icon('fa fa-copy');
+            $group->item('Create SiteMap', function (Item $item) {
+                $item->icon('fa fa-sitemap');
                 $item->weight(10);
                 $item->authorize(
                      /* append */
                 );
-                $item->item(trans('createsitemap::sitemaps.title.sitemaps'), function (Item $item) {
-                    $item->icon('fa fa-copy');
+                // $item->item(trans('createsitemap::sitemaps.title.sitemaps'), function (Item $item) {
+                //     $item->icon('fa fa-copy');
+                //     $item->weight(0);
+                //     $item->append('admin.createsitemap.sitemaps.create');
+                //     $item->route('admin.createsitemap.sitemaps.index');
+                //     $item->authorize(
+                //         $this->auth->hasAccess('createsitemap.sitemaps.index')
+                //     );
+                // });
+                $item->item('Generate SiteMap.xml', function (Item $item) {
+                    $item->icon('fa fa-sitemap');
                     $item->weight(0);
                     $item->append('admin.createsitemap.sitemaps.create');
-                    $item->route('admin.createsitemap.sitemaps.index');
-                    $item->authorize(
-                        $this->auth->hasAccess('createsitemap.sitemaps.index')
-                    );
+                    $item->route('admin.createsitemap.sitemaps.generatesitemap');
                 });
 // append
 
