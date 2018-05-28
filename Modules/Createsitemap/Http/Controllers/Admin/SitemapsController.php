@@ -31,7 +31,97 @@ class SitemapsController extends AdminBaseController
      */
 
     public function generateSiteMap(){
+      $html='<!DOCTYPE html>
+      <html lang="en" dir="ltr">
+        <head>
+          <meta charset="utf-8">
+          <title>'.$_SERVER["HTTP_HOST"].'</title>
+          <style type="text/css">
+      	body {
+      		background-color: #fff;
+      		font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+      		margin: 0;
+      	}
 
+      	#top {
+
+      		background-color: #b1d1e8;
+      		font-size: 16px;
+      		padding-bottom: 40px;
+      	}
+
+      	h3 {
+      		margin: auto;
+      		padding: 10px;
+      		max-width: 600px;
+      		color: #666;
+      	}
+
+      	h3 span {
+      		float: right;
+      	}
+
+      	h3 a {
+      		font-weight: normal;
+      		display: block;
+      	}
+
+
+      	#cont {
+      		position: relative;
+      		border-radius: 6px;
+      		box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+
+      		background: #f3f3f3;
+
+      		margin: -20px 30px 0px 30px;
+      		padding: 20px;
+      	}
+
+      	a:link,
+      	a:visited {
+      		color: #0180AF;
+      		text-decoration: underline;
+      	}
+
+      	a:hover {
+      		color: #666;
+      	}
+
+      	#footer {
+      		padding: 10px;
+      		text-align: center;
+      	}
+
+      	ul {
+          	margin: 0px;
+
+          	padding: 0px;
+          	list-style: none;
+      	}
+      	li {
+      		margin: 0px;
+      	}
+      	li ul {
+      		margin-left: 20px;
+      	}
+
+      	.lpage {
+      		border-bottom: #ddd 1px solid;
+      		padding: 5px;
+      	}
+      	.last-page {
+      		border: none;
+      	}
+      	</style>
+        </head>
+        <body>
+          <div id="top" style="text-align:center;">
+            <h3>Generated Site Map - '.$_SERVER["HTTP_HOST"].'</h3>
+          </div>
+          <div id="cont">
+            <label> Sites of project</label>
+            <ul>';
       $m=new \diversen\meta();
       // $ary=$m->getMeta("http://www.imaginacolombia.com/");
       // print_r($ary);
@@ -42,17 +132,10 @@ class SitemapsController extends AdminBaseController
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
       $app = app();
       $routes = $app->routes->getRoutes();
-      $xml .=
-      '<url>
-      <loc>http://'.$_SERVER["HTTP_HOST"].'/</loc>
-      <lastmod>'.date("Y-m-d H:i:s").'</lastmod>
-      <priority>1.00</priority>
-      </url>';
-      $ary=$m->getMeta("http://".$_SERVER["HTTP_HOST"]."/");
-      $routesArray=array_merge($routesArray,array(['tittle'=>$ary['title'],'route'=>"http://".$_SERVER["HTTP_HOST"]."/"]));
+      $xml.="";
       foreach($routes as $route){
         // echo 'Uri: '.$route->uri.' Name: '.$route->getName().' Prefix: '.$route->getPrefix().' Method: '.$route->getActionMethod().'<br>';
-        if($route->getActionMethod()=="show" || $route->getActionMethod()=="index"){
+        if($route->getActionMethod()=="show" || $route->getActionMethod()=="index" || $route->getActionMethod()=="homepage"){
           if(strpos($route->uri, 'backend') !== false || strpos($route->uri, '{') !== false || strpos($route->uri, 'api') !== false){
 
           }else{
@@ -61,7 +144,7 @@ class SitemapsController extends AdminBaseController
             '<url>
             <loc>http://'.$_SERVER["HTTP_HOST"].'/'.$route->uri.'</loc>
             <lastmod>'.date("Y-m-d H:i:s").'</lastmod>
-            <priority>0.80</priority>
+            <priority>1.00</priority>
             </url>';
             $ary=$m->getMeta("http://".$_SERVER["HTTP_HOST"]."/".$route->uri);
             $routesArray=array_merge($routesArray,array(['tittle'=>$ary['title'],'route'=>"http://".$_SERVER["HTTP_HOST"]."/".$route->uri]));
@@ -69,10 +152,28 @@ class SitemapsController extends AdminBaseController
           }//else
         }//Type method route = show
       }//foreach routes
+      foreach($routesArray as $ar){
+        if(is_null($ar['tittle']))
+          $html.='<li class="lpage"><a href="'.$ar['route'].'/">'.$ar['route'].'</a></li>';
+        else
+          $html.='<li class="lpage"><a href="'.$ar['route'].'/">'.$ar['tittle'].'</a></li>';
+      }
+      $html.='</ul></div>
+      <div id="footer">
+      <a href="http://'.$_SERVER["HTTP_HOST"].'/">'.$_SERVER["HTTP_HOST"].'</a> - Site Map - Last Updated '.date("Y-m-d H:i:s").'
+      </div>
+      </body>
+      </html>
+      ';
+      $file_name_html = "sitemap.html";
+      file_exists($file_name_html);
       // dd('stop');
-      $ary=$m->getMeta("http://www.imaginacolombia.com/");
-      $routesArray=array_merge($routesArray,array(['tittle'=>$ary['title'],'route'=>"http://".$_SERVER["HTTP_HOST"]."/".$route->uri]));
-      $bandera=0;
+      if($file = fopen($file_name_html, "w")){
+        if(fwrite($file, $html)){
+          $message="It has been executed correctly";
+        }
+        fclose($file);
+      }//if($file = fopen($file_name, "w")){
       $xml .='</urlset>';
       $file_name = "sitemap.xml";
       if(file_exists($file_name))
