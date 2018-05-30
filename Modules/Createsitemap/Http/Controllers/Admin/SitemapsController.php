@@ -9,7 +9,7 @@ use Modules\Createsitemap\Http\Requests\CreateSitemapsRequest;
 use Modules\Createsitemap\Http\Requests\UpdateSitemapsRequest;
 use Modules\Createsitemap\Repositories\SitemapsRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
-
+use diversen\meta;
 class SitemapsController extends AdminBaseController
 {
     /**
@@ -122,7 +122,7 @@ class SitemapsController extends AdminBaseController
           <div id="cont">
             <label> Sites of project</label>
             <ul>';
-      $m=new \diversen\meta();
+      $m=new meta();
       // $ary=$m->getMeta("http://www.imaginacolombia.com/");
       // print_r($ary);
       // // print_r($ary['title']);
