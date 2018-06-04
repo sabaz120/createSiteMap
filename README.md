@@ -15,10 +15,6 @@ Features:
 
   With this, the module will be downloaded into your project.
 
-  $ composer require diversen/get-meta-tags
-
-  This will install a package to get the names of each page
-
 2) Add the following to your composer.json:
 
 In the autoload section in psr-4 add the following line:
